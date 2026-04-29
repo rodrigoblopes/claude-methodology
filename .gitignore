@@ -1,0 +1,27 @@
+# OS noise
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Editor / IDE
+.vscode/
+.idea/
+*.sublime-*
+
+# Local environment
+.env
+.env.local
+*.local
+
+# Secrets — paranoid catches
+*.pem
+*.key
+id_rsa
+id_ed25519
+.ssh/
+
+# Backups
+*.bak
+*.orig
