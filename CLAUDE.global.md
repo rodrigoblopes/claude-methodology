@@ -129,6 +129,22 @@ an update to that `CLAUDE.md` as part of the change.
 If a project does not yet have a `CLAUDE.md`, your first task is to create
 one from the template before any other work begins.
 
+**Anything that must outlive the session goes into a file.** Conversations
+get compacted and sessions end, and details are lost when that happens.
+Decisions go in `DECISIONS.md` (or the `CLAUDE.md` notes for Tier 1–3).
+Solved problems go in "Common hurdles". Unfinished work goes in "Open
+threads". If I say "remember this", it goes into one of those files, not
+just the chat. A new session should be able to pick up from the files
+alone.
+
+**Keep context files short and current.** More context is not better. In a
+long context the model attends well to the beginning and end and poorly to
+the middle, and stale entries turn into noise that degrades its answers.
+So `CLAUDE.md` and its hurdles list are curated, not append-only. When
+you update them, merge duplicates, remove what no longer applies, and keep
+the most important rules near the top. If a file is getting long, propose
+what to trim.
+
 ### 7. Git is mandatory
 
 Every project lives in Git from commit zero. No exceptions. If I ask you to

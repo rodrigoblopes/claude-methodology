@@ -186,9 +186,12 @@ Example shape:
 
 ## Common hurdles and their solutions
 
-> Append-only log of problems we've hit and how we solved them. Future-you
-> and Claude Code both consult this before re-debugging things we've
-> already debugged.
+> Curated list of problems we've hit and how we solved them. Future-you
+> and the agent both consult this before re-debugging things we've
+> already debugged. Keep it current, not append-only: merge duplicates
+> and remove entries that no longer apply (a dependency was dropped, the
+> code was rewritten). Stale entries are noise that crowds out the useful
+> ones.
 
 ### `<short title of the problem>`
 
@@ -197,6 +200,16 @@ Example shape:
 **Solution:** `<what to do>`
 **Why this isn't obvious:** `<why we got tripped up — helps recognise the
 shape of the problem next time>`
+
+---
+
+## Open threads
+
+> Unfinished work, pending decisions and known follow-ups, so a new
+> session (or you after a break) can pick up without the old
+> conversation. Remove an item when it's done.
+
+- `<YYYY-MM-DD — what's pending, and where it stands>`
 
 ---
 
@@ -220,7 +233,8 @@ Before any feature is considered "done", verify:
 - [ ] Logs at appropriate level — enough to debug, not so much it's noise.
 - [ ] Documentation updated — README, this file, runbook if applicable.
 - [ ] Commits are small, well-titled, and tell a coherent story.
-- [ ] `CLAUDE.md` updated if architecture, stack, env, or patterns changed.
+- [ ] `CLAUDE.md` updated if architecture, stack, env, or patterns changed,
+      stale entries trimmed, and "Open threads" current.
 - [ ] (Tier 3+) Deployment notes updated.
 - [ ] (Tier 4) `DECISIONS.md` updated if a significant choice was made.
 
