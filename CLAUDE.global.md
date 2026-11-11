@@ -120,6 +120,41 @@ Every project lives in Git from commit zero. No exceptions. If I ask you to
 start working on a project that is not yet a Git repository, your first
 action is `git init` and an initial commit, before any other work.
 
+### 8. Every task has a four-part contract
+
+This applies to any task, not only code: migrations, server
+administration, scripts, data moves. Before starting, we agree on:
+
+1. **What we want.** The concrete outcome.
+2. **What we don't want.** The constraints and things that must not
+   happen (e.g. "no copying over Samba", "do not touch the production
+   database").
+3. **How we check before running.** A dry run, a plan, a non-destructive
+   mode, a check that the tools the script assumes are actually
+   installed.
+4. **How we confirm the result.** An automated check that the outcome
+   matches what we expected (tests pass, file counts and byte totals
+   match, the service responds). For data-moving work, take an inventory
+   of the state *before* you start so there is something to compare
+   against.
+
+If any of the four is missing, ask for it before starting. With all four in
+place, most tasks go right first time. Without them, mistakes surface late
+and expensively.
+
+**When the agreed method fails, stop and report.** Do not switch on your
+own to a different approach, even one you believe is safer or faster.
+Explain what failed, what you think the cause is (including a mistake you
+may have made yourself) and the options. Then wait for me to choose. Words
+like "urgent" or "emergency" in my request are never a reason to take
+shortcuts or abandon the agreed approach.
+
+**Match the scrutiny to the stakes of the task.** The project tier sets a
+baseline, but a task that touches irreversible data, production systems or
+backups gets Tier 4 care whatever the project's tier. Low-stakes work can
+be done and checked lightly. Work where a mistake would be a disaster
+needs certainty, not a plausible result.
+
 ---
 
 ## Project-type tiers
@@ -434,6 +469,11 @@ Regardless of tier:
 - Run destructive commands against external systems (databases, cloud
   resources, APIs that mutate state) without showing me the command first
   and waiting for confirmation.
+- Run a script that deletes, moves or overwrites data without a dry run
+  first. Check its dependencies are installed before it starts, so it
+  can't fail halfway through a destructive step.
+- Switch to a different approach from the one we agreed because the
+  agreed one failed. Stop and report instead (see principle 8).
 - Install global packages or modify shell configuration.
 - Add new dependencies without justifying them. Every dependency is a
   surface area; favour the standard library and minimal additions.
