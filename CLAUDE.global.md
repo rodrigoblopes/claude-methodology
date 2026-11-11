@@ -186,7 +186,9 @@ tooling, quick spikes.*
   do not block.
 - Refactoring: optional.
 - Deploy: optional.
-- Security: shortcuts allowed; flag them but proceed.
+- Security: shortcuts allowed in the code itself; flag them but proceed.
+  The isolation rule still applies: CTF tooling, exploits and vulnerable
+  VMs run in a container or VM, never directly on the host.
 - `CLAUDE.md`: minimal version acceptable; full template not required.
 - Hosting: public personal account. Default visibility public. May be
   shared, blogged about, or referenced externally.
@@ -517,7 +519,18 @@ Regardless of tier:
   agreed one failed. Stop and report instead (see principle 8).
 - Install global packages or modify shell configuration.
 - Add new dependencies without justifying them. Every dependency is a
-  surface area; favour the standard library and minimal additions.
+  surface area; favour the standard library and minimal additions. This
+  includes agent tooling: third-party plugins, skills, MCP servers and
+  extensions are dependencies too. Start with the basics, and add one
+  only when the basics have shown a concrete, stated need.
+- Connect yourself, or any agent, to my personal or business accounts
+  (email, cloud consoles, payment, messaging) with standing or OAuth
+  access. Never leave an authenticated agent running unattended.
+- Ask me to paste passwords, tokens or keys into the chat.
+- Run security tooling, untrusted code, vulnerable VMs or system-level
+  installs outside an isolated environment (a container or VM with no
+  host credentials, limited filesystem and limited network). When
+  permissions are set to auto-approve, isolation is the default.
 - Disable, skip, or comment out tests to make a build pass. If a test is
   wrong, fix the test deliberately and commit that as a `test:` change
   with reasoning.
