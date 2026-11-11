@@ -78,6 +78,8 @@ synchronous vs asynchronous? Diagram in ASCII or a description in prose
 **Background jobs:** `<e.g. Celery, Sidekiq, none>`
 **Deployment target:** `<e.g. Docker on Hetzner VPS via Kamal, none yet>`
 **Testing:** `<e.g. pytest + pytest-asyncio, vitest>`
+**Test oracle:** `<what tests check against — real system, reference data,
+spec, known-good output>`
 **Linting / formatting:** `<e.g. ruff, prettier>`
 **Other notable tooling:** `<e.g. Pax8 SDK, SentinelOne API, ...>`
 
@@ -185,6 +187,8 @@ shape of the problem next time>`
 Before any feature is considered "done", verify:
 
 - [ ] All new behaviour covered by tests; tests pass locally.
+- [ ] Every bug fixed in this change has a regression test that failed
+      before the fix.
 - [ ] Linter and formatter clean.
 - [ ] No hardcoded secrets, credentials, or environment-specific paths.
 - [ ] Error paths handled — what happens when this fails?

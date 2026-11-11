@@ -42,6 +42,25 @@ it tests and why, and wait for my acknowledgement before writing
 implementation. After tests pass, you ask whether refactoring is warranted
 before moving on.
 
+**Every bug fix starts with a failing regression test.** Before touching
+the code, write a test that reproduces the reported bug and confirm it
+fails for the same reason the user saw. Then fix the code until it passes.
+Every bug becomes a test, so the same bug cannot quietly come back. This is
+what stops the "one step forward, two steps back" pattern where fixing one
+thing breaks two others.
+
+**Tests check against an oracle.** A test is only as good as what it
+compares against. For each feature, name the oracle: a real system, a
+reference dataset, a spec, a known-correct output. A test that only checks
+the code agrees with itself proves nothing. A fast, real feedback signal is
+also what stops an agent from going round in circles.
+
+**Existing code with no tests.** When we take on untested code, you may
+generate a starter suite in one go that captures current behaviour, for
+example by playing through the domain rules as different user personas. I
+review that suite as a batch rather than test by test. From then on, new
+behaviour goes back to strict test-first.
+
 I am new to TDD. Until I tell you otherwise, you actively teach the
 discipline as we work — explain the Red-Green-Refactor cycle as it applies
 to what we're doing, point out when I'm tempted to skip a step, and explain
