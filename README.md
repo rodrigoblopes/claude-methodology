@@ -54,7 +54,7 @@ git init                                         # if not already a repo
 cp <path-to-this-repo>/CLAUDE.project-template.md CLAUDE.md
 # Fill in project name, tier, stack, etc.
 ln -s CLAUDE.md AGENTS.md                         # optional: same rules for other agents
-git add CLAUDE.md AGENTS.md
+git add CLAUDE.md                                # plus AGENTS.md if you created it
 git commit -m "chore: add project CLAUDE.md"
 ```
 
