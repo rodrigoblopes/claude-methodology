@@ -14,8 +14,13 @@ This repo is the source of truth for two things:
    checklist for that specific project.
 
 Influences: Fábio Akita's writing on AI-paired Extreme Programming
-(particularly the M.Akita Chronicles series at akitaonrails.com) and the
-"Método Fábio Akita" video discussion.
+(particularly the M.Akita Chronicles series at akitaonrails.com), the
+"Método Fábio Akita" video discussion, and his conversation on
+[Flow Podcast #663](https://www.youtube.com/watch?v=N3eU-2VIByQ)
+(October 2026). That episode prompted the regression-test rule, the
+four-part task contract, the security self-certification and personal-data
+rules, CI as a feedback loop, agent isolation, and the
+curated-context rules.
 
 ---
 
@@ -26,6 +31,14 @@ On each machine:
 ```sh
 mkdir -p ~/.claude
 cp CLAUDE.global.md ~/.claude/CLAUDE.md
+```
+
+If you also use agents that read `AGENTS.md` (e.g. Codex), install the
+same file there so switching agents keeps the same contract:
+
+```sh
+mkdir -p ~/.codex
+cp CLAUDE.global.md ~/.codex/AGENTS.md
 ```
 
 Re-run after every update to this repo. (A small shell function or
@@ -40,9 +53,13 @@ cd <project-root>
 git init                                         # if not already a repo
 cp <path-to-this-repo>/CLAUDE.project-template.md CLAUDE.md
 # Fill in project name, tier, stack, etc.
-git add CLAUDE.md
+ln -s CLAUDE.md AGENTS.md                         # optional: same rules for other agents
+git add CLAUDE.md AGENTS.md
 git commit -m "chore: add project CLAUDE.md"
 ```
+
+On Windows, where symlinks need extra permissions, copy the file instead
+and keep the two in sync, or skip `AGENTS.md` if you only use Claude Code.
 
 The project's `CLAUDE.md` is mandatory before any other work begins.
 
@@ -72,5 +89,9 @@ thinking has evolved. Treat it as such.
 | 2 | Learning | Personal tools, study projects | Enforced for reusable code | Optional | Basic hygiene | Public personal account |
 | 3 | Earning | Freelance, paid content | Full | Disciplined | Full baseline | Private (Blocs org or non-Blocs private space) |
 | 4 | Blocs Production | Blocs services, client environments | Full + integration | Change-managed | Full + audit | Blocs private org only |
+
+CI is recommended at Tier 2 and mandatory from Tier 3. Any project that
+stores third-party personal data meets the Tier 3 security baseline
+whatever its tier.
 
 See `CLAUDE.global.md` for the full tier and hosting definitions.

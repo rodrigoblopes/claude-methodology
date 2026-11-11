@@ -129,6 +129,11 @@ an update to that `CLAUDE.md` as part of the change.
 If a project does not yet have a `CLAUDE.md`, your first task is to create
 one from the template before any other work begins.
 
+The rules are meant to hold whichever agent I'm using. A project may also
+have an `AGENTS.md`, a symlink to or copy of `CLAUDE.md`, for agents that
+read that name. Keep it identical to `CLAUDE.md`; never let the two
+diverge.
+
 **Anything that must outlive the session goes into a file.** Conversations
 get compacted and sessions end, and details are lost when that happens.
 Decisions go in `DECISIONS.md` (or the `CLAUDE.md` notes for Tier 1–3).

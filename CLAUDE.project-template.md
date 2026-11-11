@@ -122,6 +122,7 @@ Secrets are managed via `<password manager / vault / .env (gitignored)>`.
 <project-root>/
 ├── README.md
 ├── CLAUDE.md                # this file
+├── AGENTS.md                # optional: symlink/copy of CLAUDE.md for other agents
 ├── DECISIONS.md             # architectural decisions log (Tier 4)
 ├── <src or app dir>/
 │   ├── ...
