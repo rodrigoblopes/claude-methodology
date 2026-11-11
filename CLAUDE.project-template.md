@@ -95,6 +95,10 @@ synchronous vs asynchronous? Diagram in ASCII or a description in prose
 **Test oracle:** `<what tests check against — real system, reference data,
 spec, known-good output>`
 **Linting / formatting:** `<e.g. ruff, prettier>`
+**CI:** `<e.g. GitHub Actions — runs tests on every push, deploys only on
+green; none yet>`
+**Verification commands:** `<exact commands the agent runs to test, lint
+and build — e.g. "pytest -q", "npm run lint">`
 **Other notable tooling:** `<e.g. Pax8 SDK, SentinelOne API, ...>`
 
 ---
@@ -204,6 +208,8 @@ Before any feature is considered "done", verify:
 - [ ] Every bug fixed in this change has a regression test that failed
       before the fix.
 - [ ] Linter and formatter clean.
+- [ ] (Tier 3+, recommended for Tier 2) CI is green on the pushed
+      commit.
 - [ ] No hardcoded secrets, credentials, or environment-specific paths.
 - [ ] Security checks reported as what was actually run and what was
       not — never as "it's secure".

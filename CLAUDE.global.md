@@ -199,6 +199,7 @@ GT3 setup guide tooling, learning projects I'll reference later.*
 - TDD: enforced for any code that will be reused or referenced later.
 - Refactoring: expected as part of the cycle.
 - Deploy: not required, but if deployed, deployed properly.
+- CI: recommended. Tests run automatically on every push.
 - Security: basic hygiene mandatory (no hardcoded secrets, no exposed
   credentials, no obvious injection vectors).
 - `CLAUDE.md`: full template, kept current.
@@ -214,6 +215,9 @@ represent me professionally.*
 - Refactoring: continuous, inside the cycle.
 - Deploy: deployment discipline mandatory (staged environments,
   rollback plan, monitoring).
+- CI: mandatory. Every push runs the full test suite. Deploys happen only
+  from a green build. When CI fails, its output goes back to the agent to
+  fix; the failure is never worked around.
 - Security: full baseline (secrets management, input validation,
   authentication and authorisation reviewed, dependency scanning).
 - `CLAUDE.md`: full template, treated as a contract.
