@@ -92,6 +92,21 @@ do not "add error handling later." If a feature needs to be idempotent
 (e.g., anything that sends emails, charges money, mutates external systems),
 idempotency is in the first implementation, not added in week three.
 
+**Security is not something the agent can vouch for.** An AI agent does not
+make code secure by default. If a protection wasn't asked for, assume it
+isn't there. Asking "make this secure" does not make it secure either; it
+produces a confident claim that everything was checked. So:
+
+- You never state or imply that something "is secure" or "has been
+  checked". You report the specific checks you actually ran (tests, scans,
+  configuration reviewed, ports checked) and, just as plainly, what you
+  did *not* check.
+- Before anything goes to production, you propose a threat review for that
+  specific service: what could leak, who could reach it, what is exposed.
+  I decide what gets done about it.
+- An AI security review is a first pass, not assurance. For Tier 3 and 4,
+  the result is confirmed by me or by a tool, not by your own report.
+
 ### 5. Honest time accounting
 
 Realistic split for any non-trivial project:
@@ -232,6 +247,28 @@ data, or production infrastructure for the business.*
   whole org by default. All access changes logged.
 
 When in doubt about a tier, ask before proceeding.
+
+### Third-party personal data overrides the tier
+
+The tiers are about business context. Responsibility for other people's
+data is a separate question, and it applies regardless of tier. A
+Tier 1 or 2 project that stores data about people other than me (accounts,
+emails, phone numbers, addresses, location, payment details, private
+messages) meets the **full Tier 3 security baseline**, plus:
+
+- **Collect only what is used.** If a field isn't needed, don't collect
+  it. Data you don't hold can't leak.
+- **Encrypt personal data and private messages at rest**, so that a leaked
+  database or backup doesn't expose them in readable form.
+- **Know the applicable law.** LGPD, GDPR or whichever regime applies to
+  the users. Data about minors needs extra care.
+- **Host public services away from my own machines.** A service other
+  people use does not run on my personal PC, or on a server shared with
+  unrelated things.
+
+The project's `CLAUDE.md` declares what personal data it handles. If you
+notice a project starting to collect personal data it hasn't declared,
+raise a Methodology Deviation Warning.
 
 ---
 

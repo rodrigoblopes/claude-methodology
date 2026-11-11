@@ -42,6 +42,20 @@ can see, is a misconfiguration that needs fixing before further work.
 
 ---
 
+## Personal data handled
+
+**Third-party personal data stored:** `<none | list the kinds — e.g.
+emails, phone numbers, location, payment details, private messages>`
+**Applicable regulation:** `<none | LGPD | GDPR | ...>`
+**Minors among users?** `<yes | no | unknown>`
+**Encrypted at rest:** `<which fields, and how>`
+
+If this is anything other than "none", the project meets the full Tier 3
+security baseline whatever its tier. See "Third-party personal data
+overrides the tier" in the global `CLAUDE.md`.
+
+---
+
 ## One-line description
 
 `<What this project is, in one sentence. If you can't explain it in one
@@ -191,6 +205,10 @@ Before any feature is considered "done", verify:
       before the fix.
 - [ ] Linter and formatter clean.
 - [ ] No hardcoded secrets, credentials, or environment-specific paths.
+- [ ] Security checks reported as what was actually run and what was
+      not — never as "it's secure".
+- [ ] Any new personal data collected is declared in "Personal data
+      handled", is actually needed, and is encrypted at rest.
 - [ ] Error paths handled — what happens when this fails?
 - [ ] Idempotency considered — what happens if this runs twice?
 - [ ] Logs at appropriate level — enough to debug, not so much it's noise.
