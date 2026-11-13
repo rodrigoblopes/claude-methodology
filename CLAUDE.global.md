@@ -279,24 +279,24 @@ reinforce the rule.
 
 ## Project-type tiers
 
-Each project's `CLAUDE.md` declares its tier. The tier governs how strictly
-the principles above are enforced.
+Each project's `CLAUDE.md` declares its tier, which governs how strictly
+the principles above are enforced. When in doubt about a tier, ask before
+proceeding.
 
 ### Tier 1 — Sandbox
 
 *Build-to-Learn experiments, throwaway code, CTF exercises, vulnerable VM
 tooling, quick spikes.*
 
-- TDD: encouraged but not enforced. You may suggest the right approach but
-  do not block.
-- Refactoring: optional.
-- Deploy: optional.
+- TDD: encouraged, not enforced. Suggest the right approach but do not
+  block.
+- Refactoring and deploy: optional.
 - Security: shortcuts allowed in the code itself; flag them but proceed.
   The isolation rule still applies: CTF tooling, exploits and vulnerable
   VMs never run directly on the host.
 - `CLAUDE.md`: minimal version acceptable; full template not required.
-- Hosting: public personal account. Default visibility public. May be
-  shared, blogged about, or referenced externally.
+- Hosting: public personal account, public by default. May be shared,
+  blogged about, or referenced externally.
 
 ### Tier 2 — Learning
 
@@ -310,8 +310,8 @@ GT3 setup guide tooling, learning projects I'll reference later.*
 - Security: basic hygiene mandatory (no hardcoded secrets, no exposed
   credentials, no obvious injection vectors).
 - `CLAUDE.md`: full template, kept current.
-- Hosting: public personal account. Default visibility public. README
-  written for outside readers.
+- Hosting: public personal account, public by default. README written
+  for outside readers.
 
 ### Tier 3 — Earning
 
@@ -320,44 +320,39 @@ represent me professionally.*
 
 - TDD: full enforcement. No production code without a failing test first.
 - Refactoring: continuous, inside the cycle.
-- Deploy: deployment discipline mandatory (staged environments,
-  rollback plan, monitoring).
-- CI: mandatory. Every push runs the full test suite. Deploys happen only
-  from a green build. When CI fails, its output goes back to the agent to
-  fix; the failure is never worked around.
+- Deploy: discipline mandatory (staged environments, rollback plan,
+  monitoring).
+- CI: mandatory. Every push runs the full suite; deploys happen only from
+  a green build. When CI fails, its output goes back to the agent to fix;
+  the failure is never worked around.
 - Security: full baseline (secrets management, input validation,
   authentication and authorisation reviewed, dependency scanning).
 - `CLAUDE.md`: full template, treated as a contract.
-- Documentation: README, runbook, and any client-facing documentation
-  required.
-- Hosting: private organisation (Blocs org for Blocs work; separate
-  private org or private personal repo for non-Blocs Tier 3). Default
-  visibility private. Never made public without an explicit declassification
-  process (see "Repository hosting and visibility" below).
+- Documentation: README, runbook, and any client-facing documentation.
+- Hosting: private, in the Blocs org or the non-Blocs private space (see
+  "Hosting locations"). Never made public except through declassification.
 
 ### Tier 4 — Blocs Production
 
 *Anything touching Blocs services, real client environments, real client
 data, or production infrastructure for the business.*
 
-- TDD: full enforcement plus integration tests for any external system
-  interaction.
-- Refactoring: continuous.
-- Deploy: full deploy discipline plus change management — every deploy
-  is logged, every change is reviewed before merge.
-- Security: full baseline plus mandatory review for any change touching
-  authentication, authorisation, data handling, or external system
-  integration. Idempotency mandatory for anything mutating external state.
+Everything in Tier 3, plus:
+
+- TDD: integration tests for any external system interaction.
+- Deploy: change management. Every deploy is logged; every change is
+  reviewed before merge.
+- Security: mandatory review for any change touching authentication,
+  authorisation, data handling, or external system integration.
+  Idempotency mandatory for anything mutating external state.
 - `CLAUDE.md`: full template plus audit trail of significant decisions.
-- Documentation: full operational documentation required, including
-  runbooks for failure scenarios.
+- Documentation: full operational documentation, including runbooks for
+  failure scenarios.
 - Audit: significant decisions and architectural changes are logged in
   the project's `DECISIONS.md`.
-- Hosting: Blocs private organisation only. Default visibility private.
-  Never made public. Access granted to specific identities, not to the
-  whole org by default. All access changes logged.
-
-When in doubt about a tier, ask before proceeding.
+- Hosting: Blocs private organisation only, never public. Access granted
+  to specific identities, not to the whole org by default. All access
+  changes logged.
 
 ### Third-party personal data overrides the tier
 
