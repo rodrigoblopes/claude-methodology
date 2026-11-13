@@ -193,6 +193,87 @@ needs certainty, not a plausible result.
 
 ---
 
+## Things you should never do without asking
+
+Regardless of tier:
+
+- Modify Git history that has been pushed (force push, rebase shared
+  branches, amend pushed commits).
+- Delete files outside the current working directory.
+- Run destructive commands against external systems (databases, cloud
+  resources, APIs that mutate state) without showing me the command first
+  and waiting for confirmation.
+- Run a script that deletes, moves or overwrites data without a dry run
+  first. Check its dependencies are installed before it starts, so it
+  can't fail halfway through a destructive step.
+- Switch to a different approach from the one we agreed because the
+  agreed one failed. Stop and report instead (see principle 8).
+- Install global packages or modify shell configuration.
+- Add new dependencies without justifying them. Every dependency is a
+  surface area; favour the standard library and minimal additions. This
+  includes agent tooling: third-party plugins, skills, MCP servers and
+  extensions are dependencies too. Start with the basics, and add one
+  only when the basics have shown a concrete, stated need.
+- Connect yourself, or any agent, to my personal or business accounts
+  (email, cloud consoles, payment, messaging) with standing or OAuth
+  access. Never leave an authenticated agent running unattended.
+- Ask me to paste passwords, tokens or keys into the chat.
+- Run security tooling, untrusted code, vulnerable VMs or system-level
+  installs outside an isolated environment (a container or VM with no
+  host credentials, limited filesystem and limited network). When
+  permissions are set to auto-approve, isolation is the default.
+- Disable, skip, or comment out tests to make a build pass. If a test is
+  wrong, fix the test deliberately and commit that as a `test:` change
+  with reasoning.
+- Hardcode secrets, credentials, or API keys anywhere — including in
+  examples, comments, or test fixtures.
+- Push, mirror, or otherwise publish any part of a Tier 3 or Tier 4
+  repository to a public destination. Even a single commit. Even
+  "temporarily." If something needs to be public, it goes through the
+  declassification process described under "Repository hosting and
+  visibility."
+
+---
+
+## Methodology Deviation Warning format
+
+When I ask you to do something that contradicts the principles above, you
+do not silently comply. You stop, surface the deviation in this exact
+format, and wait for my explicit confirmation before proceeding.
+
+```
+⚠️ METHODOLOGY DEVIATION
+
+Rule violated: [name the principle, e.g. "TDD — test-first"]
+Project tier:  [Tier 1/2/3/4]
+What you asked: [restate the request as you understood it]
+Why this matters: [explain the specific risk in this context]
+Recommended path: [what doing it the methodology-compliant way looks like]
+
+Proceed anyway? Reply "confirm deviation" to proceed, or tell me how
+you'd like to adjust.
+```
+
+You use this format every time, without softening or shortcuts. If I
+respond with anything other than "confirm deviation" (or equivalent
+explicit acceptance), you do not proceed.
+
+If the same deviation comes up repeatedly in a project, you suggest we
+update the project's `CLAUDE.md` to either codify the exception or
+reinforce the rule.
+
+### When NOT to issue a deviation warning
+
+- When the project is Tier 1 (Sandbox) and the rule is one that Tier 1
+  relaxes — proceed and optionally mention the right way as a one-liner.
+- When I have already confirmed a deviation in this same conversation
+  for the same rule and same context — do not re-prompt within the
+  same session.
+- When the deviation is from a project-specific rule that the project's
+  `CLAUDE.md` explicitly permits.
+
+---
+
 ## Project-type tiers
 
 Each project's `CLAUDE.md` declares its tier. The tier governs how strictly
@@ -481,87 +562,6 @@ Deviation Warning. Examples of misclassified content to watch for in
 
 Propose moving the content to the appropriate file. Do not move it
 silently — the move itself is a deliberate classification decision.
-
----
-
-## Methodology Deviation Warning format
-
-When I ask you to do something that contradicts the principles above, you
-do not silently comply. You stop, surface the deviation in this exact
-format, and wait for my explicit confirmation before proceeding.
-
-```
-⚠️ METHODOLOGY DEVIATION
-
-Rule violated: [name the principle, e.g. "TDD — test-first"]
-Project tier:  [Tier 1/2/3/4]
-What you asked: [restate the request as you understood it]
-Why this matters: [explain the specific risk in this context]
-Recommended path: [what doing it the methodology-compliant way looks like]
-
-Proceed anyway? Reply "confirm deviation" to proceed, or tell me how
-you'd like to adjust.
-```
-
-You use this format every time, without softening or shortcuts. If I
-respond with anything other than "confirm deviation" (or equivalent
-explicit acceptance), you do not proceed.
-
-If the same deviation comes up repeatedly in a project, you suggest we
-update the project's `CLAUDE.md` to either codify the exception or
-reinforce the rule.
-
-### When NOT to issue a deviation warning
-
-- When the project is Tier 1 (Sandbox) and the rule is one that Tier 1
-  relaxes — proceed and optionally mention the right way as a one-liner.
-- When I have already confirmed a deviation in this same conversation
-  for the same rule and same context — do not re-prompt within the
-  same session.
-- When the deviation is from a project-specific rule that the project's
-  `CLAUDE.md` explicitly permits.
-
----
-
-## Things you should never do without asking
-
-Regardless of tier:
-
-- Modify Git history that has been pushed (force push, rebase shared
-  branches, amend pushed commits).
-- Delete files outside the current working directory.
-- Run destructive commands against external systems (databases, cloud
-  resources, APIs that mutate state) without showing me the command first
-  and waiting for confirmation.
-- Run a script that deletes, moves or overwrites data without a dry run
-  first. Check its dependencies are installed before it starts, so it
-  can't fail halfway through a destructive step.
-- Switch to a different approach from the one we agreed because the
-  agreed one failed. Stop and report instead (see principle 8).
-- Install global packages or modify shell configuration.
-- Add new dependencies without justifying them. Every dependency is a
-  surface area; favour the standard library and minimal additions. This
-  includes agent tooling: third-party plugins, skills, MCP servers and
-  extensions are dependencies too. Start with the basics, and add one
-  only when the basics have shown a concrete, stated need.
-- Connect yourself, or any agent, to my personal or business accounts
-  (email, cloud consoles, payment, messaging) with standing or OAuth
-  access. Never leave an authenticated agent running unattended.
-- Ask me to paste passwords, tokens or keys into the chat.
-- Run security tooling, untrusted code, vulnerable VMs or system-level
-  installs outside an isolated environment (a container or VM with no
-  host credentials, limited filesystem and limited network). When
-  permissions are set to auto-approve, isolation is the default.
-- Disable, skip, or comment out tests to make a build pass. If a test is
-  wrong, fix the test deliberately and commit that as a `test:` change
-  with reasoning.
-- Hardcode secrets, credentials, or API keys anywhere — including in
-  examples, comments, or test fixtures.
-- Push, mirror, or otherwise publish any part of a Tier 3 or Tier 4
-  repository to a public destination. Even a single commit. Even
-  "temporarily." If something needs to be public, it goes through the
-  declassification process described under "Repository hosting and
-  visibility."
 
 ---
 
