@@ -378,99 +378,86 @@ Methodology Deviation Warning.
 
 ## Repository hosting and visibility
 
-The tier determines where a project's repository lives, what its default
-visibility is, and what posture you take toward what's inside it. This is
-not a flag flipped after the fact — it is decided at project creation,
-codified in the project's `CLAUDE.md`, and enforced by the structure of
-where the repo is hosted.
+The tier decides where a repository lives, its default visibility, and
+your posture toward its contents. This is decided at project creation,
+written in the project's `CLAUDE.md`, and enforced by where the repo is
+hosted, not by a flag flipped later.
 
 ### Hosting locations
 
-- **Public personal account** — Tier 1 and Tier 2 only. This is my public
-  engineering identity. Anyone can see this and form an impression of how
-  I work.
-- **Blocs private organisation** — Tier 4 always. Tier 3 work that is
-  Blocs-related. Boundary is structural — work lives behind organisational
-  membership, not behind a per-repo visibility flag.
-- **Non-Blocs private space** (separate private org, or private repos on
-  personal account) — Tier 3 work that is not Blocs-related. Kept distinct
-  from Blocs to avoid contractual or visual confusion about whose work
-  it is.
+- **Public personal account**: Tier 1 and 2 only. This is my public
+  engineering identity; anyone can see it and judge how I work.
+- **Blocs private organisation**: all Tier 4, and Blocs-related Tier 3.
+  Work sits behind organisational membership, not a per-repo flag.
+- **Non-Blocs private space** (a separate private org, or private repos
+  on my personal account): non-Blocs Tier 3, kept apart from Blocs to
+  avoid confusion, contractual or visual, about whose work it is.
 
-The reason for separating along account/organisation boundaries rather
-than just per-repo visibility flags: a misclick on visibility settings
-can flip a private repo public in one click. Putting Tier 3+ work in a
-separate organisation means "make this public" requires moving across an
-organisational boundary, which is a much harder accident to make.
+Why organisations and not visibility flags: one misclick can flip a
+private repo public. With Tier 3+ work in a separate organisation, going
+public means crossing an organisational boundary, a much harder accident.
 
-### Public-by-default mindset (Tier 1 and Tier 2)
+### Public by default (Tier 1 and 2)
 
-The risk is *accidentally leaking something private into a public space*.
-Discipline:
+The risk is leaking something private into a public space.
 
-- Assume every commit, comment, and issue is world-readable. Because it is.
-- Never paste real credentials, real client names, real internal hostnames,
-  or real production data into a Tier 1/2 repo even temporarily. There is
-  no "I'll remove it before pushing" — Git remembers.
-- Use a pre-commit hook that scans for secret patterns. Any project that
-  goes onto the public account gets the hook configured before its first
-  push.
-- README is written for outside readers from day one. Assume someone who
-  has never met you will be the first reader.
-- Issue and PR titles are written assuming public readership.
+- Every commit, comment, issue and PR title is world-readable, because it
+  is.
+- Never put real credentials, client names, internal hostnames or
+  production data in the repo, even temporarily. There is no "I'll remove
+  it before pushing"; Git remembers.
+- A pre-commit hook that scans for secret patterns is configured before
+  the first push to the public account.
+- The README is written for outside readers from day one.
 
-### Private-by-default mindset (Tier 3 and Tier 4)
+### Private by default (Tier 3 and 4)
 
-The risk is *accidentally exposing what should stay private*. Discipline:
+The risk is exposing what should stay private.
 
-- Assume nothing in this repo is ever appropriate for a public space. If
-  something *might* eventually go public (a generic utility extracted
-  from the project, for example), it is extracted into its own Tier 1/2
-  repo deliberately, not by changing the visibility of the parent.
-- Client names, client environments, and client-specific configurations
-  never appear in code, commit messages, issue titles, or filenames.
-  Use opaque identifiers (`client-a`, `tenant-1`) and keep the mapping in
-  a separate, more restricted location.
-- Screenshots, log excerpts, and example data shared even within the
-  organisation are scrubbed before being attached to issues or PRs.
-- Access to the repo is granted to specific people for specific reasons.
-  Default org-wide read access is not assumed.
+- Nothing in the repo is assumed fit for a public space. Something that
+  might go public (say, a generic utility) is extracted into its own
+  Tier 1/2 repo deliberately, never by changing the parent's visibility.
+- Client names, environments and client-specific configuration never
+  appear in code, commit messages, issue titles or filenames. Use opaque
+  identifiers (`client-a`, `tenant-1`) and keep the mapping in a
+  separate, more restricted location.
+- Screenshots, log excerpts and example data are scrubbed before being
+  attached to issues or PRs, even within the organisation.
+- Access goes to specific people for specific reasons. Org-wide read
+  access is not assumed.
 
 ### Declassification — moving Tier 3 work toward public
 
-Sometimes a piece of Tier 3 work should become public — a generic
-utility, a sanitised tutorial, an extracted library. This is a deliberate
-process, never a setting toggle:
+A deliberate process, never a setting toggle:
 
 1. Identify the specific component to extract. The whole project does
    not become public; a clean piece does.
-2. Extract that component into a new repository in the public personal
-   account, with no shared Git history with the original.
-3. Sanitise: remove any client references, internal naming, environment
-   assumptions, or context that ties it to the original project.
-4. Treat the new repo as Tier 1 or Tier 2 from creation, with a fresh
+2. Extract it into a new repository on the public personal account, with
+   no Git history shared with the original.
+3. Sanitise: remove client references, internal naming, environment
+   assumptions, and any context tying it to the original project.
+4. Treat the new repo as Tier 1 or 2 from creation, with a fresh
    `CLAUDE.md` declaring its tier.
-5. Document the extraction in the original project's `DECISIONS.md`
-   (Tier 4) or `CLAUDE.md` notes section (Tier 3) so the lineage is
-   recorded.
+5. Record the extraction in the original project's `DECISIONS.md`
+   (Tier 4) or `CLAUDE.md` notes (Tier 3) so the lineage is kept.
 
 Tier 4 work is never declassified, in part or whole. Anything that needs
-to be public starts its life as a separate Tier 1 or Tier 2 project.
+to be public starts life as a separate Tier 1 or 2 project.
 
-### When you are about to act on a repo
+### Before any remote operation
 
-Before any `git push`, `git remote add`, `gh repo create`, or equivalent
-remote operation, you confirm:
+Before any `git push`, `git remote add`, `gh repo create` or similar,
+confirm:
 
 - The destination matches the project's declared tier and hosting.
-- For public destinations: no secrets, no client references, no internal
+- Public destination: no secrets, client references or internal
   hostnames in the diff being pushed.
-- For private destinations: the destination organisation matches the
-  project's declared owner (Blocs work goes to the Blocs org, not to
-  the personal private space, and vice versa).
+- Private destination: the organisation matches the project's declared
+  owner (Blocs work to the Blocs org, not the personal private space,
+  and vice versa).
 
-If the destination does not match, surface a Methodology Deviation
-Warning before proceeding.
+If it does not match, raise a Methodology Deviation Warning before
+proceeding.
 
 ---
 
