@@ -42,6 +42,20 @@ can see, is a misconfiguration that needs fixing before further work.
 
 ---
 
+## Personal data handled
+
+**Third-party personal data stored:** `<none | list the kinds — e.g.
+emails, phone numbers, location, payment details, private messages>`
+**Applicable regulation:** `<none | LGPD | GDPR | ...>`
+**Minors among users?** `<yes | no | unknown>`
+**Encrypted at rest:** `<which fields, and how>`
+
+If this is anything other than "none", the project meets the full Tier 3
+security baseline whatever its tier. See "Third-party personal data
+overrides the tier" in the global `CLAUDE.md`.
+
+---
+
 ## One-line description
 
 `<What this project is, in one sentence. If you can't explain it in one
@@ -78,7 +92,13 @@ synchronous vs asynchronous? Diagram in ASCII or a description in prose
 **Background jobs:** `<e.g. Celery, Sidekiq, none>`
 **Deployment target:** `<e.g. Docker on Hetzner VPS via Kamal, none yet>`
 **Testing:** `<e.g. pytest + pytest-asyncio, vitest>`
+**Test oracle:** `<what tests check against — real system, reference data,
+spec, known-good output>`
 **Linting / formatting:** `<e.g. ruff, prettier>`
+**CI:** `<e.g. GitHub Actions — runs tests on every push, deploys only on
+green; none yet>`
+**Verification commands:** `<exact commands the agent runs to test, lint
+and build — e.g. "pytest -q", "npm run lint">`
 **Other notable tooling:** `<e.g. Pax8 SDK, SentinelOne API, ...>`
 
 ---
@@ -102,6 +122,7 @@ Secrets are managed via `<password manager / vault / .env (gitignored)>`.
 <project-root>/
 ├── README.md
 ├── CLAUDE.md                # this file
+├── AGENTS.md                # optional: symlink/copy of CLAUDE.md for other agents
 ├── DECISIONS.md             # architectural decisions log (Tier 4)
 ├── <src or app dir>/
 │   ├── ...
@@ -166,9 +187,12 @@ Example shape:
 
 ## Common hurdles and their solutions
 
-> Append-only log of problems we've hit and how we solved them. Future-you
-> and Claude Code both consult this before re-debugging things we've
-> already debugged.
+> Curated list of problems we've hit and how we solved them. Future-you
+> and the agent both consult this before re-debugging things we've
+> already debugged. Keep it current, not append-only: merge duplicates
+> and remove entries that no longer apply (a dependency was dropped, the
+> code was rewritten). Stale entries are noise that crowds out the useful
+> ones.
 
 ### `<short title of the problem>`
 
@@ -180,19 +204,38 @@ shape of the problem next time>`
 
 ---
 
+## Open threads
+
+> Unfinished work, pending decisions and known follow-ups, so a new
+> session (or you after a break) can pick up without the old
+> conversation. Remove an item when it's done.
+
+- `<YYYY-MM-DD — what's pending, and where it stands>`
+
+---
+
 ## Post-implementation checklist
 
 Before any feature is considered "done", verify:
 
 - [ ] All new behaviour covered by tests; tests pass locally.
+- [ ] Every bug fixed in this change has a regression test that failed
+      before the fix.
 - [ ] Linter and formatter clean.
+- [ ] (Tier 3+, recommended for Tier 2) CI is green on the pushed
+      commit.
 - [ ] No hardcoded secrets, credentials, or environment-specific paths.
+- [ ] Security checks reported as what was actually run and what was
+      not — never as "it's secure".
+- [ ] Any new personal data collected is declared in "Personal data
+      handled", is actually needed, and is encrypted at rest.
 - [ ] Error paths handled — what happens when this fails?
 - [ ] Idempotency considered — what happens if this runs twice?
 - [ ] Logs at appropriate level — enough to debug, not so much it's noise.
 - [ ] Documentation updated — README, this file, runbook if applicable.
 - [ ] Commits are small, well-titled, and tell a coherent story.
-- [ ] `CLAUDE.md` updated if architecture, stack, env, or patterns changed.
+- [ ] `CLAUDE.md` updated if architecture, stack, env, or patterns changed,
+      stale entries trimmed, and "Open threads" current.
 - [ ] (Tier 3+) Deployment notes updated.
 - [ ] (Tier 4) `DECISIONS.md` updated if a significant choice was made.
 

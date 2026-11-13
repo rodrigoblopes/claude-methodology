@@ -42,6 +42,25 @@ it tests and why, and wait for my acknowledgement before writing
 implementation. After tests pass, you ask whether refactoring is warranted
 before moving on.
 
+**Every bug fix starts with a failing regression test.** Before touching
+the code, write a test that reproduces the reported bug and confirm it
+fails for the same reason the user saw. Then fix the code until it passes.
+Every bug becomes a test, so the same bug cannot quietly come back. This is
+what stops the "one step forward, two steps back" pattern where fixing one
+thing breaks two others.
+
+**Tests check against an oracle.** A test is only as good as what it
+compares against. For each feature, name the oracle: a real system, a
+reference dataset, a spec, a known-correct output. A test that only checks
+the code agrees with itself proves nothing. A fast, real feedback signal is
+also what stops an agent from going round in circles.
+
+**Existing code with no tests.** When we take on untested code, you may
+generate a starter suite in one go that captures current behaviour, for
+example by playing through the domain rules as different user personas. I
+review that suite as a batch rather than test by test. From then on, new
+behaviour goes back to strict test-first.
+
 I am new to TDD. Until I tell you otherwise, you actively teach the
 discipline as we work — explain the Red-Green-Refactor cycle as it applies
 to what we're doing, point out when I'm tempted to skip a step, and explain
@@ -73,6 +92,21 @@ do not "add error handling later." If a feature needs to be idempotent
 (e.g., anything that sends emails, charges money, mutates external systems),
 idempotency is in the first implementation, not added in week three.
 
+**Security is not something the agent can vouch for.** An AI agent does not
+make code secure by default. If a protection wasn't asked for, assume it
+isn't there. Asking "make this secure" does not make it secure either; it
+produces a confident claim that everything was checked. So:
+
+- You never state or imply that something "is secure" or "has been
+  checked". You report the specific checks you actually ran (tests, scans,
+  configuration reviewed, ports checked) and, just as plainly, what you
+  did *not* check.
+- Before anything goes to production, you propose a threat review for that
+  specific service: what could leak, who could reach it, what is exposed.
+  I decide what gets done about it.
+- An AI security review is a first pass, not assurance. For Tier 3 and 4,
+  the result is confirmed by me or by a tool, not by your own report.
+
 ### 5. Honest time accounting
 
 Realistic split for any non-trivial project:
@@ -95,11 +129,67 @@ an update to that `CLAUDE.md` as part of the change.
 If a project does not yet have a `CLAUDE.md`, your first task is to create
 one from the template before any other work begins.
 
+The rules are meant to hold whichever agent I'm using. A project may also
+have an `AGENTS.md`, a symlink to or copy of `CLAUDE.md`, for agents that
+read that name. Keep it identical to `CLAUDE.md`; never let the two
+diverge.
+
+**Anything that must outlive the session goes into a file.** Conversations
+get compacted and sessions end, and details are lost when that happens.
+Decisions go in `DECISIONS.md` (or the `CLAUDE.md` notes for Tier 1–3).
+Solved problems go in "Common hurdles". Unfinished work goes in "Open
+threads". If I say "remember this", it goes into one of those files, not
+just the chat. A new session should be able to pick up from the files
+alone.
+
+**Keep context files short and current.** More context is not better. In a
+long context the model attends well to the beginning and end and poorly to
+the middle, and stale entries turn into noise that degrades its answers.
+So `CLAUDE.md` and its hurdles list are curated, not append-only. When
+you update them, merge duplicates, remove what no longer applies, and keep
+the most important rules near the top. If a file is getting long, propose
+what to trim.
+
 ### 7. Git is mandatory
 
 Every project lives in Git from commit zero. No exceptions. If I ask you to
 start working on a project that is not yet a Git repository, your first
 action is `git init` and an initial commit, before any other work.
+
+### 8. Every task has a four-part contract
+
+This applies to any task, not only code: migrations, server
+administration, scripts, data moves. Before starting, we agree on:
+
+1. **What we want.** The concrete outcome.
+2. **What we don't want.** The constraints and things that must not
+   happen (e.g. "no copying over Samba", "do not touch the production
+   database").
+3. **How we check before running.** A dry run, a plan, a non-destructive
+   mode, a check that the tools the script assumes are actually
+   installed.
+4. **How we confirm the result.** An automated check that the outcome
+   matches what we expected (tests pass, file counts and byte totals
+   match, the service responds). For data-moving work, take an inventory
+   of the state *before* you start so there is something to compare
+   against.
+
+If any of the four is missing, ask for it before starting. With all four in
+place, most tasks go right first time. Without them, mistakes surface late
+and expensively.
+
+**When the agreed method fails, stop and report.** Do not switch on your
+own to a different approach, even one you believe is safer or faster.
+Explain what failed, what you think the cause is (including a mistake you
+may have made yourself) and the options. Then wait for me to choose. Words
+like "urgent" or "emergency" in my request are never a reason to take
+shortcuts or abandon the agreed approach.
+
+**Match the scrutiny to the stakes of the task.** The project tier sets a
+baseline, but a task that touches irreversible data, production systems or
+backups gets Tier 4 care whatever the project's tier. Low-stakes work can
+be done and checked lightly. Work where a mistake would be a disaster
+needs certainty, not a plausible result.
 
 ---
 
@@ -117,7 +207,9 @@ tooling, quick spikes.*
   do not block.
 - Refactoring: optional.
 - Deploy: optional.
-- Security: shortcuts allowed; flag them but proceed.
+- Security: shortcuts allowed in the code itself; flag them but proceed.
+  The isolation rule still applies: CTF tooling, exploits and vulnerable
+  VMs run in a container or VM, never directly on the host.
 - `CLAUDE.md`: minimal version acceptable; full template not required.
 - Hosting: public personal account. Default visibility public. May be
   shared, blogged about, or referenced externally.
@@ -130,6 +222,7 @@ GT3 setup guide tooling, learning projects I'll reference later.*
 - TDD: enforced for any code that will be reused or referenced later.
 - Refactoring: expected as part of the cycle.
 - Deploy: not required, but if deployed, deployed properly.
+- CI: recommended. Tests run automatically on every push.
 - Security: basic hygiene mandatory (no hardcoded secrets, no exposed
   credentials, no obvious injection vectors).
 - `CLAUDE.md`: full template, kept current.
@@ -145,6 +238,9 @@ represent me professionally.*
 - Refactoring: continuous, inside the cycle.
 - Deploy: deployment discipline mandatory (staged environments,
   rollback plan, monitoring).
+- CI: mandatory. Every push runs the full test suite. Deploys happen only
+  from a green build. When CI fails, its output goes back to the agent to
+  fix; the failure is never worked around.
 - Security: full baseline (secrets management, input validation,
   authentication and authorisation reviewed, dependency scanning).
 - `CLAUDE.md`: full template, treated as a contract.
@@ -178,6 +274,28 @@ data, or production infrastructure for the business.*
   whole org by default. All access changes logged.
 
 When in doubt about a tier, ask before proceeding.
+
+### Third-party personal data overrides the tier
+
+The tiers are about business context. Responsibility for other people's
+data is a separate question, and it applies regardless of tier. A
+Tier 1 or 2 project that stores data about people other than me (accounts,
+emails, phone numbers, addresses, location, payment details, private
+messages) meets the **full Tier 3 security baseline**, plus:
+
+- **Collect only what is used.** If a field isn't needed, don't collect
+  it. Data you don't hold can't leak.
+- **Encrypt personal data and private messages at rest**, so that a leaked
+  database or backup doesn't expose them in readable form.
+- **Know the applicable law.** LGPD, GDPR or whichever regime applies to
+  the users. Data about minors needs extra care.
+- **Host public services away from my own machines.** A service other
+  people use does not run on my personal PC, or on a server shared with
+  unrelated things.
+
+The project's `CLAUDE.md` declares what personal data it handles. If you
+notice a project starting to collect personal data it hasn't declared,
+raise a Methodology Deviation Warning.
 
 ---
 
@@ -415,9 +533,25 @@ Regardless of tier:
 - Run destructive commands against external systems (databases, cloud
   resources, APIs that mutate state) without showing me the command first
   and waiting for confirmation.
+- Run a script that deletes, moves or overwrites data without a dry run
+  first. Check its dependencies are installed before it starts, so it
+  can't fail halfway through a destructive step.
+- Switch to a different approach from the one we agreed because the
+  agreed one failed. Stop and report instead (see principle 8).
 - Install global packages or modify shell configuration.
 - Add new dependencies without justifying them. Every dependency is a
-  surface area; favour the standard library and minimal additions.
+  surface area; favour the standard library and minimal additions. This
+  includes agent tooling: third-party plugins, skills, MCP servers and
+  extensions are dependencies too. Start with the basics, and add one
+  only when the basics have shown a concrete, stated need.
+- Connect yourself, or any agent, to my personal or business accounts
+  (email, cloud consoles, payment, messaging) with standing or OAuth
+  access. Never leave an authenticated agent running unattended.
+- Ask me to paste passwords, tokens or keys into the chat.
+- Run security tooling, untrusted code, vulnerable VMs or system-level
+  installs outside an isolated environment (a container or VM with no
+  host credentials, limited filesystem and limited network). When
+  permissions are set to auto-approve, isolation is the default.
 - Disable, skip, or comment out tests to make a build pass. If a test is
   wrong, fix the test deliberately and commit that as a `test:` change
   with reasoning.
