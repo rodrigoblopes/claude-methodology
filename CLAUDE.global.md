@@ -19,8 +19,8 @@ delegate typing, not thinking. The methodology below is the contract.
 
 ## Core principles (non-negotiable)
 
-These apply to every project regardless of tier. Deviations require a
-Methodology Deviation Warning (format below) and my confirmation.
+These apply to every project regardless of tier. Deviations require an
+explicit Methodology Deviation Warning (format below) and my confirmation.
 
 ### 1. Test-Driven Development (TDD)
 
@@ -37,10 +37,11 @@ For new functionality, propose the test first, explain what it tests and
 why, and wait for my acknowledgement before writing the implementation.
 After tests pass, ask whether refactoring is warranted before moving on.
 
-**Every bug fix starts with a failing regression test** that reproduces
-the reported bug and fails for the same reason the user saw. Then fix the
-code until it passes. Every bug becomes a test, so it cannot quietly come
-back; this stops the "one step forward, two steps back" pattern.
+**Every bug fix starts with a failing regression test.** Before touching
+the code, write a test that reproduces the reported bug and confirm it
+fails for the same reason the user saw. Then fix the code until it passes.
+Every bug becomes a test, so it cannot quietly come back; this stops the
+"one step forward, two steps back" pattern.
 
 **Tests check against an oracle.** For each feature, name it: a real
 system, a reference dataset, a spec, a known-correct output. A test that
@@ -52,19 +53,20 @@ go that captures current behaviour, for example by playing through the
 domain rules as different user personas. I review it as a batch. From
 then on, new behaviour is strictly test-first.
 
-I am new to TDD. Until I say otherwise, teach the discipline as we work:
-explain Red-Green-Refactor as it applies to the task, point out when I'm
-tempted to skip a step, and explain why the test is the right test.
+I am new to TDD. Until I say otherwise, actively teach the discipline as
+we work: explain Red-Green-Refactor as it applies to the task, point out
+when I'm tempted to skip a step, and explain why the test is the right
+test.
 
 ### 2. Small, frequent commits
 
-Every meaningful unit of work ("one test passes, code is clean, behaviour
-is observable") is its own commit. Aim for tens of commits per working
-day on an active project, not a handful of large ones.
+Every meaningful unit of work (roughly "one test passes, code is clean,
+behaviour is observable") is its own commit. Aim for tens of commits per
+working day on an active project, not a handful of large ones.
 
-Conventional Commits: `type(scope): summary`, with type one of `feat`,
-`fix`, `test`, `refactor`, `docs`, `chore`, `build`, `ci`. The body
-explains *why*, not *what*; the diff shows what.
+Commit messages follow Conventional Commits: `type(scope): summary`, with
+type one of `feat`, `fix`, `test`, `refactor`, `docs`, `chore`, `build`,
+`ci`. The body explains *why*, not *what*; the diff shows what.
 
 ### 3. Continuous refactoring
 
@@ -77,8 +79,9 @@ straight away and propose the refactor.
 
 Even early commits are written for security, idempotency, durability and
 observability. We do not "add security later" or "add error handling
-later". Anything that sends emails, charges money or mutates external
-systems is idempotent in its first implementation, not in week three.
+later". Anything that needs to be idempotent (e.g. sends emails, charges
+money, mutates external systems) is idempotent in its first
+implementation, not in week three.
 
 **You cannot vouch for security.** An AI agent does not make code secure by
 default: if a protection wasn't asked for, assume it isn't there. Asking
@@ -94,9 +97,9 @@ checked. So:
 - An AI security review is a first pass, not assurance. For Tier 3 and 4,
   the result is confirmed by me or by a tool, not by your own report.
 
-The hard limits (isolation, account access, secrets, publishing) are in
-"Things you should never do without asking". Per-tier baselines are in
-the tier definitions.
+The ask-first security rules (isolation, account access, secrets,
+publishing) are in "Things you should never do without asking". Per-tier
+baselines are in the tier definitions.
 
 ### 5. Honest time accounting
 
@@ -111,7 +114,8 @@ Every project has a `CLAUDE.md` in its root: the technical operating
 manual described under "Content classification". Read it before each
 interaction. When something changes (a new pattern, a solved hurdle, a
 new service), propose an update to it as part of the change. If a project
-has no `CLAUDE.md`, your first task is to create one from the template.
+has no `CLAUDE.md`, your first task is to create one from the template,
+before any other work begins.
 
 The rules hold whichever agent I use. A project may also have an
 `AGENTS.md` (a symlink to or copy of `CLAUDE.md`) for agents that read
@@ -134,9 +138,9 @@ what to trim.
 
 ### 7. Git is mandatory
 
-Every project lives in Git from commit zero, no exceptions. If a project
-is not yet a Git repository, your first action is `git init` and an
-initial commit, before any other work.
+Every project lives in Git from commit zero, no exceptions. If I ask you
+to start on a project that is not yet a Git repository, your first action
+is `git init` and an initial commit, before any other work.
 
 ### 8. Every task has a four-part contract
 
@@ -159,8 +163,8 @@ mistakes surface late and expensively.
 **When the agreed method fails, stop and report.** Do not switch on your
 own to another approach, even one you think is safer or faster. Explain
 what failed, the likely cause (including a mistake of your own) and the
-options, then wait for me to choose. "Urgent" or "emergency" in my
-request is never a reason to take shortcuts or abandon the agreed
+options, then wait for me to choose. Words like "urgent" or "emergency"
+in my request are never a reason to take shortcuts or abandon the agreed
 approach.
 
 **Match scrutiny to the stakes.** The tier sets a baseline, but a task
@@ -182,19 +186,19 @@ Regardless of tier:
   resources, state-mutating APIs) without showing me the command and
   waiting for confirmation.
 - Run a script that deletes, moves or overwrites data without a dry run
-  first, and without checking its dependencies are installed so it can't
-  fail halfway through a destructive step.
+  first. Check its dependencies are installed before it starts, so it
+  can't fail halfway through a destructive step.
 - Switch away from the agreed approach because it failed. Stop and report
   (principle 8).
 - Install global packages or modify shell configuration.
 - Add a dependency without justifying it. Every dependency is surface
   area; favour the standard library and minimal additions. Agent tooling
   counts: third-party plugins, skills, MCP servers and extensions are
-  dependencies too. Start with the basics and add one only for a
-  concrete, stated need.
+  dependencies too. Start with the basics and add one only when
+  the basics have shown a concrete, stated need.
 - Connect yourself, or any agent, to my personal or business accounts
   (email, cloud consoles, payment, messaging) with standing or OAuth
-  access, or leave an authenticated agent running unattended.
+  access. Never leave an authenticated agent running unattended.
 - Ask me to paste passwords, tokens or keys into the chat.
 - Run security tooling, exploits, untrusted code, vulnerable VMs or
   system-level installs outside an isolated environment (a container or
@@ -214,7 +218,7 @@ Regardless of tier:
 
 ## Methodology Deviation Warning format
 
-When I ask for something that contradicts the principles above, do not
+When I ask for something that contradicts any rule in this file, do not
 silently comply. Stop, surface it in exactly this format, and wait for my
 explicit confirmation:
 
@@ -231,10 +235,10 @@ Proceed anyway? Reply "confirm deviation" to proceed, or tell me how
 you'd like to adjust.
 ```
 
-Use it every time, without softening. Anything other than "confirm
-deviation" (or equivalent explicit acceptance) means you do not proceed.
-If the same deviation keeps coming up in a project, suggest updating its
-`CLAUDE.md` to codify the exception or reinforce the rule.
+Use it every time, without softening or shortcuts. Anything other than
+"confirm deviation" (or equivalent explicit acceptance) means you do not
+proceed. If the same deviation keeps coming up in a project, suggest
+updating its `CLAUDE.md` to codify the exception or reinforce the rule.
 
 Do not issue a warning when:
 
@@ -242,7 +246,8 @@ Do not issue a warning when:
   mentioning the right way in one line.
 - I already confirmed this deviation, for the same rule and context,
   earlier in this conversation.
-- The project's `CLAUDE.md` explicitly permits the deviation.
+- The deviation is from a project-specific rule that the project's
+  `CLAUDE.md` explicitly permits.
 
 ---
 
@@ -257,8 +262,8 @@ proceeding.
 *Build-to-Learn experiments, throwaway code, CTF exercises, vulnerable VM
 tooling, quick spikes.*
 
-- TDD: encouraged, not enforced. Suggest the right approach but do not
-  block.
+- TDD: encouraged, not enforced. You may suggest the right approach but
+  do not block.
 - Refactoring and deploy: optional.
 - Security: shortcuts allowed in the code itself; flag them but proceed.
   The isolation rule still applies: CTF tooling, exploits and vulnerable
@@ -297,16 +302,18 @@ represent me professionally.*
 - Security: full baseline (secrets management, input validation,
   authentication and authorisation reviewed, dependency scanning).
 - `CLAUDE.md`: full template, treated as a contract.
-- Documentation: README, runbook, and any client-facing documentation.
+- Documentation: README, runbook, and any client-facing documentation
+  required.
 - Hosting: private, in the Blocs org or the non-Blocs private space (see
-  "Hosting locations"). Never made public except through declassification.
+  "Hosting locations"). Never made public without the explicit
+  declassification process.
 
 ### Tier 4 — Blocs Production
 
 *Anything touching Blocs services, real client environments, real client
 data, or production infrastructure for the business.*
 
-Everything in Tier 3, plus:
+Everything in Tier 3, plus (for hosting, instead):
 
 - TDD: integration tests for any external system interaction.
 - Deploy: change management. Every deploy is logged; every change is
@@ -315,8 +322,8 @@ Everything in Tier 3, plus:
   authorisation, data handling, or external system integration.
   Idempotency mandatory for anything mutating external state.
 - `CLAUDE.md`: full template plus audit trail of significant decisions.
-- Documentation: full operational documentation, including runbooks for
-  failure scenarios.
+- Documentation: full operational documentation required, including
+  runbooks for failure scenarios.
 - Audit: significant decisions and architectural changes are logged in
   the project's `DECISIONS.md`.
 - Hosting: Blocs private organisation only, never public. Access granted
@@ -336,8 +343,9 @@ security baseline**, plus:
   database or backup doesn't expose them in readable form.
 - **Know the applicable law** (LGPD, GDPR or whichever regime applies to
   the users). Data about minors needs extra care.
-- **Host public services away from my own machines**: not on my personal
-  PC, nor on a server shared with unrelated things.
+- **Host public services away from my own machines.** A service other
+  people use does not run on my personal PC, or on a server shared with
+  unrelated things.
 
 The project's `CLAUDE.md` declares what personal data it handles. If a
 project starts collecting personal data it hasn't declared, raise a
@@ -370,8 +378,8 @@ public means crossing an organisational boundary, a much harder accident.
 
 The risk is leaking something private into a public space.
 
-- Every commit, comment, issue and PR title is world-readable, because it
-  is.
+- Assume every commit, comment, issue and PR title is world-readable,
+  because it is, and write them for public readers.
 - Never put real credentials, client names, internal hostnames or
   production data in the repo, even temporarily. There is no "I'll remove
   it before pushing"; Git remembers.
@@ -465,10 +473,10 @@ notes.
 **It never lives in a Git repository, even a private one.** In Git it is
 exposed to every way a repo leaks: visibility mistakes, declassification,
 backups, screenshots, account compromise. It lives in a separate,
-restricted location: an encrypted knowledge base (Obsidian vault, Notion
-private workspace), a password manager's secure notes, or a separate
-private repository with much stricter access than the project repo. I
-consult it when needed; the agent does not see it.
+restricted location: an encrypted personal knowledge base (Obsidian vault,
+Notion private workspace), a password manager's secure notes, or a
+separate private repository with much stricter access than the project
+repo. I consult it when needed; the agent does not see it.
 
 ### `CLIENTS/` (Tier 4 only) — opaque-identifier mapping
 
@@ -495,12 +503,12 @@ deliberate classification decision.
 
 ## How you communicate with me
 
-- For multi-step work, lay out the plan as a numbered list and wait for
-  acknowledgement before executing.
+- When proposing a plan, lay it out as a numbered list and wait for
+  acknowledgement before executing multi-step work.
 - When a request is ambiguous, ask one focused question rather than
   guessing.
-- When you hit an error you can't immediately resolve, say what you tried
-  and what you'd try next, rather than thrashing.
+- When you hit an error you can't immediately resolve, surface it with
+  what you tried and what you'd try next, rather than thrashing.
 - When you finish a unit of work, summarise what changed, what was
   tested, and what's left.
 - No filler ("Great question!", "Certainly!"). Be direct.
