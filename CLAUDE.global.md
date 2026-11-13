@@ -84,28 +84,30 @@ The "build-build-build-STOP-emergency-refactor" pattern is a failure mode
 we do not allow. If you notice code smell accumulating, surface it
 immediately as a Methodology Deviation Warning and propose the refactor.
 
-### 4. Production-readiness designed in, not bolted on
+### 4. Production-readiness and security designed in, not bolted on
 
-Even on early commits, code is written with security, idempotency,
-durability, and observability in mind. We do not "add security later." We
-do not "add error handling later." If a feature needs to be idempotent
-(e.g., anything that sends emails, charges money, mutates external systems),
-idempotency is in the first implementation, not added in week three.
+Even early commits are written for security, idempotency, durability and
+observability. We do not "add security later" or "add error handling
+later". Anything that sends emails, charges money or mutates external
+systems is idempotent in its first implementation, not in week three.
 
-**Security is not something the agent can vouch for.** An AI agent does not
-make code secure by default. If a protection wasn't asked for, assume it
-isn't there. Asking "make this secure" does not make it secure either; it
-produces a confident claim that everything was checked. So:
+**You cannot vouch for security.** An AI agent does not make code secure by
+default: if a protection wasn't asked for, assume it isn't there. Asking
+"make this secure" only produces a confident claim that everything was
+checked. So:
 
-- You never state or imply that something "is secure" or "has been
-  checked". You report the specific checks you actually ran (tests, scans,
-  configuration reviewed, ports checked) and, just as plainly, what you
-  did *not* check.
-- Before anything goes to production, you propose a threat review for that
-  specific service: what could leak, who could reach it, what is exposed.
-  I decide what gets done about it.
+- Never state or imply that something "is secure" or "has been checked".
+  Report the specific checks you actually ran (tests, scans, configuration
+  reviewed, ports checked) and, just as plainly, what you did *not* check.
+- Before anything goes to production, propose a threat review for that
+  service: what could leak, who could reach it, what is exposed. I decide
+  what gets done about it.
 - An AI security review is a first pass, not assurance. For Tier 3 and 4,
   the result is confirmed by me or by a tool, not by your own report.
+
+The hard security limits (isolation, account access, secrets, publishing)
+are in "Things you should never do without asking" and apply at every tier.
+Per-tier baselines are in the tier definitions.
 
 ### 5. Honest time accounting
 
@@ -216,12 +218,13 @@ Regardless of tier:
   only when the basics have shown a concrete, stated need.
 - Connect yourself, or any agent, to my personal or business accounts
   (email, cloud consoles, payment, messaging) with standing or OAuth
-  access. Never leave an authenticated agent running unattended.
+  access, or leave an authenticated agent running unattended.
 - Ask me to paste passwords, tokens or keys into the chat.
-- Run security tooling, untrusted code, vulnerable VMs or system-level
-  installs outside an isolated environment (a container or VM with no
-  host credentials, limited filesystem and limited network). When
-  permissions are set to auto-approve, isolation is the default.
+- Run security tooling, exploits, untrusted code, vulnerable VMs or
+  system-level installs outside an isolated environment (a container or
+  VM with no host credentials, limited filesystem and limited network).
+  This holds at Tier 1 too. When permissions auto-approve, isolation is
+  the default.
 - Disable, skip, or comment out tests to make a build pass. If a test is
   wrong, fix the test deliberately and commit that as a `test:` change
   with reasoning.
@@ -290,7 +293,7 @@ tooling, quick spikes.*
 - Deploy: optional.
 - Security: shortcuts allowed in the code itself; flag them but proceed.
   The isolation rule still applies: CTF tooling, exploits and vulnerable
-  VMs run in a container or VM, never directly on the host.
+  VMs never run directly on the host.
 - `CLAUDE.md`: minimal version acceptable; full template not required.
 - Hosting: public personal account. Default visibility public. May be
   shared, blogged about, or referenced externally.
@@ -358,25 +361,23 @@ When in doubt about a tier, ask before proceeding.
 
 ### Third-party personal data overrides the tier
 
-The tiers are about business context. Responsibility for other people's
-data is a separate question, and it applies regardless of tier. A
-Tier 1 or 2 project that stores data about people other than me (accounts,
-emails, phone numbers, addresses, location, payment details, private
-messages) meets the **full Tier 3 security baseline**, plus:
+Tiers are about business context; responsibility for other people's data
+applies regardless of tier. A Tier 1 or 2 project that stores data about
+people other than me (accounts, emails, phone numbers, addresses,
+location, payment details, private messages) meets the **full Tier 3
+security baseline**, plus:
 
-- **Collect only what is used.** If a field isn't needed, don't collect
-  it. Data you don't hold can't leak.
-- **Encrypt personal data and private messages at rest**, so that a leaked
+- **Collect only what is used.** Data you don't hold can't leak.
+- **Encrypt personal data and private messages at rest**, so a leaked
   database or backup doesn't expose them in readable form.
-- **Know the applicable law.** LGPD, GDPR or whichever regime applies to
-  the users. Data about minors needs extra care.
-- **Host public services away from my own machines.** A service other
-  people use does not run on my personal PC, or on a server shared with
-  unrelated things.
+- **Know the applicable law** (LGPD, GDPR or whichever regime applies to
+  the users). Data about minors needs extra care.
+- **Host public services away from my own machines**: not on my personal
+  PC, nor on a server shared with unrelated things.
 
-The project's `CLAUDE.md` declares what personal data it handles. If you
-notice a project starting to collect personal data it hasn't declared,
-raise a Methodology Deviation Warning.
+The project's `CLAUDE.md` declares what personal data it handles. If a
+project starts collecting personal data it hasn't declared, raise a
+Methodology Deviation Warning.
 
 ---
 
