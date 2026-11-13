@@ -121,10 +121,9 @@ say "it's basically done" before that phase is complete, you push back.
 
 ### 6. The project `CLAUDE.md` is a living spec
 
-Every project has a `CLAUDE.md` in its root that captures architecture,
-stack, environment variables, directory structure, services/jobs/models,
-common hurdles, design patterns, pipeline schedules, and post-implementation
-checklists. You read it before each interaction. When something changes —
+Every project has a `CLAUDE.md` in its root: the technical operating
+manual described under "Content classification". You read it before each
+interaction. When something changes —
 a new pattern emerges, a hurdle is solved, a service is added — you propose
 an update to that `CLAUDE.md` as part of the change.
 
@@ -463,43 +462,29 @@ proceeding.
 
 ## Content classification — what goes where
 
-A project accretes information over time: technical, architectural,
-operational, business. Putting all of it into `CLAUDE.md` is a category
-error. Different kinds of information have different audiences, different
-lifecycles, and different sensitivity levels. They live in different
-places.
+Different kinds of project information have different audiences,
+lifecycles and sensitivity, so they live in different places. Putting
+all of it in `CLAUDE.md` is a category error.
 
 ### `CLAUDE.md` — the technical operating manual
 
-Strictly technical content needed to do work on this project correctly:
+Only what is needed to do technical work correctly: architecture
+(technical structure, not market positioning), stack and tooling,
+environment variable names and purposes (never values), directory
+structure and conventions, services, jobs and data models (their
+technical shape, not their business purpose), design patterns, pipeline
+schedules (timing, not the business reason for it), common technical
+hurdles and their fixes, and the post-implementation checklist.
 
-- Architecture overview (technical structure, not market positioning).
-- Tech stack and tooling.
-- Environment variables (names and purposes, never values).
-- Directory structure and conventions.
-- Services, jobs, and data models (the technical shape, not the
-  business meaning of why each exists).
-- Design patterns this project follows.
-- Pipeline schedules (operational timing, not the business reason for
-  the timing).
-- Common technical hurdles and their solutions.
-- Post-implementation checklist.
-
-Treat `CLAUDE.md` as a file that, if seen by a hostile reader, would
-reveal *how the system is built* but nothing about *why the business
-made the choices it did*.
+A hostile reader of `CLAUDE.md` should learn *how the system is built*
+and nothing about *why the business made its choices*.
 
 ### `DECISIONS.md` — Architectural Decision Records
 
-Technical decisions and the technical reasoning behind them. "We chose
-SQLite over Postgres because the deployment target is single-node and
-we want zero-config backups." "We rejected the queue-based approach
-because the operational complexity outweighed the throughput need at
-this scale."
-
-Lives in the repository. Useful to the agent for context when proposing
-changes that touch the same areas. Not business-sensitive — these are
-engineering choices, even on Tier 4 projects.
+Technical decisions and their technical reasoning ("SQLite over Postgres
+because the target is single-node and we want zero-config backups").
+Lives in the repository and gives you context when a change touches the
+same area. Engineering choices, not business-sensitive, even on Tier 4.
 
 ### `BUSINESS.md` — outside the repository
 
@@ -507,44 +492,34 @@ Business reasoning, pricing logic, client-specific context, competitive
 analysis, sales context, revenue-relevant decisions, partner relationship
 notes.
 
-**This file does not live in any Git repository — even a private one.**
-The moment it enters Git, it is subject to every leakage path that
-threatens the repo: visibility misconfiguration, extraction during
-declassification, backup exposure, screenshot leak, account compromise.
-
-Lives instead in a separate, restricted location: an encrypted personal
-knowledge base (Obsidian vault, Notion private workspace), a password
-manager's secure notes, or a separate private repository with
-significantly stricter access controls than the project repo. You
-consult it when needed. The agent does not see it.
+**It never lives in a Git repository, even a private one.** In Git it is
+exposed to every way a repo leaks: visibility mistakes, declassification,
+backups, screenshots, account compromise. It lives in a separate,
+restricted location: an encrypted knowledge base (Obsidian vault, Notion
+private workspace), a password manager's secure notes, or a separate
+private repository with much stricter access than the project repo. I
+consult it when needed; the agent does not see it.
 
 ### `CLIENTS/` (Tier 4 only) — opaque-identifier mapping
 
-Where real client identities meet the opaque identifiers used in code
-and `CLAUDE.md` (`client-a`, `tenant-1`). Lives in the same restricted
-location as `BUSINESS.md`, never in the project repo.
-
-Code, commit messages, issue titles, and `CLAUDE.md` reference clients
-only through opaque identifiers. The mapping is dereferenced manually
-when needed.
+Maps real client identities to the opaque identifiers used in code and
+`CLAUDE.md` (`client-a`, `tenant-1`). Lives with `BUSINESS.md`, never in
+the project repo. Code, commit messages, issue titles and `CLAUDE.md`
+refer to clients only by opaque identifier; the mapping is looked up
+manually when needed.
 
 ### When you notice misclassified content
 
-If, while working on a project, you notice content in `CLAUDE.md` that
-belongs in `BUSINESS.md` or `DECISIONS.md` — surface a Methodology
-Deviation Warning. Examples of misclassified content to watch for in
-`CLAUDE.md`:
+If `CLAUDE.md` contains something that belongs in `BUSINESS.md` or
+`DECISIONS.md`, raise a Methodology Deviation Warning. Watch for pricing
+rationale or prices, real client names or identifiable client details,
+competitive positioning ("we differ from competitor X by…"), revenue or
+sales reasoning, personal context about partners, contractors or
+relationships, and reasoning that begins "we charge…", "the customer
+wants…" or "the business case for this is…".
 
-- Pricing rationale or specific prices.
-- Real client names or identifiable client characteristics.
-- Competitive positioning ("we differ from competitor X by…").
-- Revenue logic or sales reasoning.
-- Personal context about partners, contractors, or relationships.
-- Reasoning that begins with "we charge…" or "the customer wants…" or
-  "the business case for this is…".
-
-Propose moving the content to the appropriate file. Do not move it
-silently — the move itself is a deliberate classification decision.
+Propose the move; do not make it silently. Moving content is a
+deliberate classification decision.
 
 ---
 
